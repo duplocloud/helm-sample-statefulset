@@ -1,0 +1,9 @@
+apiVersion: v2
+appVersion: "1.0"
+description: A Helm chart for PTD K8s Setup
+maintainers:
+- email: ops@pathlockgrc.com
+  name: OPS Group
+name: appsiancloud-ptd
+type: application
+version: 0.1.12

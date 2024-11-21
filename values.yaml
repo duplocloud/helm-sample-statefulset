@@ -1,0 +1,108 @@
+#Below are the list of variables to be used for PTD application
+Environment: stage1 #change this for every env change
+
+#change this for every env change 
+# run below az cli comand to get the value
+# az identity show --ids /subscriptions/{subscription-id}/resourceGroups/MC_resourcegroupname_clustername_region/providers/Microsoft.ManagedIdentity/userAssignedIdentities/clustername-agentpool --query clientId --output tsv
+# eg az identity show --ids /subscriptions/d779fc81-b54d-4701-8e1c-bd36c36faa0f/resourceGroups/MC_pathlockgrc-rg_pathlockgrc-dev1-cluster-aks_centralindia/providers/Microsoft.ManagedIdentity/userAssignedIdentities/pathlockgrc-dev1-cluster-aks-agentpool --query clientId --output tsv
+clientId: 127815bf-a9ad-47cb-8ce5-cb3eeee1741c
+tenantId: c146a1f4-120f-4f35-af4b-7b8d175442b2
+keyVaultName: pathlock-helm-check-vaul
+hostname: app-helm-pathlock.duplocloud.net #change this for every tenant
+ProfileTailorConnectionURL: ""   
+ProfileTailorConnectionPORT: ""
+RDS_USERNAME: ""   
+RDS_PASSWORD: ""
+DATABASE_NAME: ""   
+
+images:
+  ECR_URL: "mcr.microsoft.com/windows"
+  imagePullPolicy: IfNotPresent
+  PTD_WEB_APP:
+    name: servercore
+    tag: ltsc2022
+    container_name: web
+  PTD_WORKER_SERVICE:
+    name: servercore
+    tag: ltsc2022
+    container_name: worker
+  PTD_SERVICE:
+    name: servercore
+    tag: ltsc2022
+    container_name: service
+
+ports:
+  PTD_WEB_APP:
+    name: ptd-web-app-port
+    port: 80
+  PTD_WORKER_SERVICE:
+    name: ptd-worker-service-port
+    port:
+      - 8890
+      - 8888
+      - 8889
+
+service:
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-name: azureteststage1-nlb
+
+  PTD_WEB_APP:
+    name: web-port
+    port: 80
+    targetPort: 80
+    protocol: TCP
+  PTD_WORKER_SERVICE:
+    name: worker-port
+    port: 8888
+    targetPort: 8888
+    protocol: TCP
+  type: ClusterIP
+
+
+resources:
+  PTD_WEB_APP:
+    requests:
+      memory: "1024Mi"
+      cpu: "150m"
+    limits:
+      memory: "4096Mi"
+      cpu: "800m"
+  PTD_WORKER_SERVICE:
+    requests:
+      memory: "1024Mi"
+      cpu: "150m"
+    limits:
+      memory: "4096Mi"
+      cpu: "800m"
+  PTD_SERVICE:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "200m"
+
+nodeSelector:
+  kubernetes.io/os: windows
+  kubernetes.io/arch: amd64
+  tenantname: duploservices-htest
+
+storage:
+  MOUNT_PATH_INSIDE_CONTAINER: C:\XpandionData\
+  storage_class_type: gp3
+  storage_request_size: 50Gi
+  storage_class_name: windows
+  static_binding:
+     enabled: false
+
+updateStrategy:
+  type: RollingUpdate
+  # rollingUpdate:
+  #   maxSurge: 2
+  #   maxUnavailable: 0
+
+
+tolerations:
+  - key: "duplocloud.net/windows-instance"
+    operator: "Exists"
+    effect: "NoExecute"

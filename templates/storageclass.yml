@@ -1,0 +1,29 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: {{.Release.Namespace}}-windows
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "false"
+provisioner: file.csi.azure.com
+volumeBindingMode: WaitForFirstConsumer
+reclaimPolicy: Retain
+allowVolumeExpansion: true
+mountOptions:
+ - dir_mode=0777
+ - file_mode=0777
+ - uid=0
+ - gid=0
+ - mfsymlinks
+ - cache=strict
+ - actimeo=30
+parameters:
+  skuName: Standard_GRS
+  tags: "tenant_name={{ .Release.Namespace }}"
+  shareName: {{ .Release.Namespace }}
+  shareNamePrefix: {{ .Values.Environment }}
+  #This is to use existing storage container instead of creating random storage account-> JIRA ISSUE ACLOUD:609
+  # resourceGroup: pathlockgrc-{{ .Values.Environment }}-rg
+  # storageAccount: pathlockgrc{{ .Values.Environment }}sa
+  # server: pathlockgrc{{ .Values.Environment }}sa.file.core.windows.net

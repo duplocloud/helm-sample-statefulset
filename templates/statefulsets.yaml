@@ -1,0 +1,141 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: {{.Release.Namespace}}
+  name: {{.Release.Namespace}}-statefulset
+  labels:
+    environment: {{ .Values.Environment }}
+    app: ptd-applications
+    domain: appsian_cloud
+    subdomain: ptd
+    app.kubernetes.io/managed-by: {{ .Release.Service }} 
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{.Release.Namespace}}-statefulset
+  serviceName: "ptd"
+  updateStrategy:
+    {{- toYaml .Values.updateStrategy | nindent 4 }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{.Release.Namespace}}-statefulset
+    spec:
+      serviceAccountName: {{.Release.Namespace}}-edit-user
+      # imagePullSecrets:
+      #     - name: regcred
+      containers:
+        - image: {{ .Values.images.ECR_URL }}/{{ .Values.images.PTD_WEB_APP.name }}:{{ .Values.images.PTD_WEB_APP.tag }}
+          imagePullPolicy: {{ .Values.images.imagePullPolicy }}
+          name: {{ .Values.images.PTD_WEB_APP.container_name }}
+          command:
+            - powershell.exe
+            - '-command'
+            - >-
+              Add-WindowsFeature Web-Server; Invoke-WebRequest -UseBasicParsing
+              -Uri
+              'https://dotnetbinaries.blob.core.windows.net/servicemonitor/2.0.1.6/ServiceMonitor.exe'
+              -OutFile 'C:\ServiceMonitor.exe'; echo
+              '<html><body><br/><br/><marquee><H1>Hello
+              EKS!!!<H1><marquee></body><html>' >
+              C:\inetpub\wwwroot\default.html; C:\ServiceMonitor.exe 'w3svc'; 
+          ports:
+            - containerPort: {{ .Values.ports.PTD_WEB_APP.port }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.service.PTD_WEB_APP.targetPort }}
+            #This fails 3 times before success. The time needs to be changed
+            initialDelaySeconds: 30 #TIME CHANGES BASED
+            periodSeconds: 60
+            timeoutSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.service.PTD_WEB_APP.targetPort }}
+            # This fails 3 times before success. The time needs to be changed
+            initialDelaySeconds: 150
+            periodSeconds: 300
+            timeoutSeconds: 50
+          env:
+          - name: CloudMode
+            valueFrom:
+              configMapKeyRef:
+                name: {{.Release.Namespace}}-configmap
+                key: CloudMode
+          - name: ProfileTailorConnectionString
+            valueFrom:
+              secretKeyRef:
+                name: {{.Release.Namespace}}-kv-secret
+                key: ProfileTailorConnectionString
+          volumeMounts:
+           - mountPath: {{ .Values.storage.MOUNT_PATH_INSIDE_CONTAINER }}
+             name: xpandion-vol-mount
+           - name: secrets-store-inline
+             mountPath: /mnt/secrets-store
+             readOnly: true
+          resources:
+            {{- toYaml .Values.resources.PTD_WEB_APP | nindent 12 }}
+            
+        - image: {{ .Values.images.ECR_URL }}/{{ .Values.images.PTD_WORKER_SERVICE.name }}:{{ .Values.images.PTD_WORKER_SERVICE.tag }}
+          imagePullPolicy: {{ .Values.images.imagePullPolicy }}
+          name: {{ .Values.images.PTD_WORKER_SERVICE.container_name }}
+          command:
+            - powershell.exe
+            - '-command'
+            - 'ping -t 127.0.0.1'
+          env:
+          - name: CloudMode
+            valueFrom:
+              configMapKeyRef:
+                name: {{.Release.Namespace}}-configmap
+                key: CloudMode
+          - name: ProfileTailorConnectionString
+            valueFrom:
+              secretKeyRef:
+                name: {{.Release.Namespace}}-kv-secret
+                key: ProfileTailorConnectionString
+          volumeMounts:
+           - mountPath: {{ .Values.storage.MOUNT_PATH_INSIDE_CONTAINER }}
+             name: xpandion-vol-mount
+           - name: secrets-store-inline
+             mountPath: /mnt/secrets-store
+             readOnly: true
+          resources:
+            {{- toYaml .Values.resources.PTD_WORKER_SERVICE | nindent 12 }}
+
+        # - image: {{ .Values.images.ECR_URL }}/{{ .Values.images.PTD_SERVICE.name }}:{{ .Values.images.PTD_SERVICE.tag }}
+        #   imagePullPolicy: IfNotPresent
+        #   name: ptd-service
+        #   env:
+        #   - name: CloudMode
+        #     valueFrom:
+        #       configMapKeyRef:
+        #         name: {{.Release.Namespace}}-configmap
+        #         key: CloudMode
+        #   - name: ProfileTailorConnectionString
+        #     valueFrom:
+        #       secretKeyRef:
+        #         name: {{.Release.Namespace}}-kv-secret
+        #         key: ProfileTailorConnectionString
+        #   volumeMounts:
+        #    - mountPath: {{ .Values.storage.MOUNT_PATH_INSIDE_CONTAINER }}
+        #      name: xpandion-vol-mount
+        #   resources:
+        #     {{- toYaml .Values.resources.PTD_SERVICE | nindent 12 }}
+      volumes:
+        - name: xpandion-vol-mount
+          persistentVolumeClaim:
+            claimName: {{.Release.Namespace}}
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: {{ .Release.Namespace }}-secretstore-secrets
+      nodeSelector:
+        {{- toYaml .Values.nodeSelector | nindent 8 }}
+      tolerations:
+        {{- toYaml .Values.tolerations | nindent 8 }}
+
