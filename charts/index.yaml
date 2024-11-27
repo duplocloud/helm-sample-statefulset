@@ -1,0 +1,17 @@
+apiVersion: v1
+entries:
+  sample-helm:
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2024-11-27T23:49:04.353165945+05:30"
+    description: A sample helm chart
+    digest: c932c1bde38b1c182d161caae034a7dddd90ff4c6607ba9578fb7b2a9153a6de
+    maintainers:
+    - email: jeeva@duplocloud.net
+      name: Duplo demo
+    name: sample-helm
+    type: application
+    urls:
+    - sample-helm-0.0.1.tgz
+    version: 0.0.1
+generated: "2024-11-27T23:49:04.340251597+05:30"
