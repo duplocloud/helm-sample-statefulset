@@ -1,9 +1,9 @@
 apiVersion: v2
 appVersion: "1.0"
-description: A Helm chart for PTD K8s Setup
+description: A sample helm chart
 maintainers:
-- email: ops@pathlockgrc.com
-  name: OPS Group
-name: appsiancloud-ptd
+- email: jeeva@duplocloud.net
+  name: Duplo demo
+name: sample-helm
 type: application
-version: 0.1.12
+version: 0.0.1
