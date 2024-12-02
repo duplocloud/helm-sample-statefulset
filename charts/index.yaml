@@ -3,7 +3,20 @@ entries:
   sample-helm:
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2024-12-02T19:01:39.747829792+05:30"
+    created: "2024-12-02T19:15:33.708916954+05:30"
+    description: A sample helm chart
+    digest: 3309a871ebccca0e45f4531206eb92bcdbcb64e9160d0c600e6c760d94d2c8b7
+    maintainers:
+    - email: jeeva@duplocloud.net
+      name: Duplo demo
+    name: sample-helm
+    type: application
+    urls:
+    - https://raw.githubusercontent.com/duplocloud/helm-sample-statefulset/refs/heads/main/charts/sample-helm-0.0.5.tgz
+    version: 0.0.5
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2024-12-02T19:15:33.704160232+05:30"
     description: A sample helm chart
     digest: e9eed0b92cfa91770e59ab46b8e531d4f0554f265e33fdaac30ff1bdb690415d
     maintainers:
@@ -16,7 +29,7 @@ entries:
     version: 0.0.4
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2024-12-02T19:01:39.73733195+05:30"
+    created: "2024-12-02T19:15:33.696265934+05:30"
     description: A sample helm chart
     digest: 72ca0dc09e8078cfa9383c8692998e1a00715d9a3be3cb2921df1bd8030d676c
     maintainers:
@@ -29,7 +42,7 @@ entries:
     version: 0.0.3
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2024-12-02T19:01:39.726216004+05:30"
+    created: "2024-12-02T19:15:33.689913077+05:30"
     description: A sample helm chart
     digest: 2f957d64a6d9852071bf8ca959058310876bfe4cdffeb62fbe1ccc01e3935d9c
     maintainers:
@@ -42,7 +55,7 @@ entries:
     version: 0.0.2
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2024-12-02T19:01:39.71710038+05:30"
+    created: "2024-12-02T19:15:33.684448601+05:30"
     description: A sample helm chart
     digest: 0d42d3bfa8e3e789641819c8f6ec2117315e1584db70ba732a92fe514680de6e
     maintainers:
@@ -53,4 +66,4 @@ entries:
     urls:
     - https://raw.githubusercontent.com/duplocloud/helm-sample-statefulset/refs/heads/main/charts/sample-helm-0.0.1.tgz
     version: 0.0.1
-generated: "2024-12-02T19:01:39.70665169+05:30"
+generated: "2024-12-02T19:15:33.679583485+05:30"
