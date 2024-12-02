@@ -59,29 +59,6 @@ service:
   type: ClusterIP
 
 
-resources:
-  PTD_WEB_APP:
-    requests:
-      memory: "1024Mi"
-      cpu: "150m"
-    limits:
-      memory: "4096Mi"
-      cpu: "800m"
-  PTD_WORKER_SERVICE:
-    requests:
-      memory: "1024Mi"
-      cpu: "150m"
-    limits:
-      memory: "4096Mi"
-      cpu: "800m"
-  PTD_SERVICE:
-    requests:
-      memory: "256Mi"
-      cpu: "100m"
-    limits:
-      memory: "512Mi"
-      cpu: "200m"
-
 nodeSelector:
   kubernetes.io/os: windows
   kubernetes.io/arch: amd64

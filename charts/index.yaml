@@ -3,15 +3,28 @@ entries:
   sample-helm:
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2024-11-27T23:49:04.353165945+05:30"
+    created: "2024-12-02T18:44:44.809750793+05:30"
     description: A sample helm chart
-    digest: c932c1bde38b1c182d161caae034a7dddd90ff4c6607ba9578fb7b2a9153a6de
+    digest: 2f957d64a6d9852071bf8ca959058310876bfe4cdffeb62fbe1ccc01e3935d9c
     maintainers:
     - email: jeeva@duplocloud.net
       name: Duplo demo
     name: sample-helm
     type: application
     urls:
-    - sample-helm-0.0.1.tgz
+    - https://raw.githubusercontent.com/duplocloud/helm-sample-statefulset/refs/heads/main/charts/sample-helm-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2024-12-02T18:44:44.793838175+05:30"
+    description: A sample helm chart
+    digest: 0d42d3bfa8e3e789641819c8f6ec2117315e1584db70ba732a92fe514680de6e
+    maintainers:
+    - email: jeeva@duplocloud.net
+      name: Duplo demo
+    name: sample-helm
+    type: application
+    urls:
+    - https://raw.githubusercontent.com/duplocloud/helm-sample-statefulset/refs/heads/main/charts/sample-helm-0.0.1.tgz
     version: 0.0.1
-generated: "2024-11-27T23:49:04.340251597+05:30"
+generated: "2024-12-02T18:44:44.779420717+05:30"
