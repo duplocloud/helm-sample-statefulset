@@ -75,8 +75,6 @@ spec:
            - name: secrets-store-inline
              mountPath: /mnt/secrets-store
              readOnly: true
-          # resources:
-          #   {{- toYaml .Values.resources.PTD_WEB_APP | nindent 12 }}
             
         - image: {{ .Values.images.ECR_URL }}/{{ .Values.images.PTD_WORKER_SERVICE.name }}:{{ .Values.images.PTD_WORKER_SERVICE.tag }}
           imagePullPolicy: {{ .Values.images.imagePullPolicy }}
@@ -102,28 +100,6 @@ spec:
            - name: secrets-store-inline
              mountPath: /mnt/secrets-store
              readOnly: true
-          # resources:
-          #   {{- toYaml .Values.resources.PTD_WORKER_SERVICE | nindent 12 }}
-
-        # - image: {{ .Values.images.ECR_URL }}/{{ .Values.images.PTD_SERVICE.name }}:{{ .Values.images.PTD_SERVICE.tag }}
-        #   imagePullPolicy: IfNotPresent
-        #   name: ptd-service
-        #   env:
-        #   - name: CloudMode
-        #     valueFrom:
-        #       configMapKeyRef:
-        #         name: {{.Release.Namespace}}-configmap
-        #         key: CloudMode
-        #   - name: ProfileTailorConnectionString
-        #     valueFrom:
-        #       secretKeyRef:
-        #         name: {{.Release.Namespace}}-kv-secret
-        #         key: ProfileTailorConnectionString
-        #   volumeMounts:
-        #    - mountPath: {{ .Values.storage.MOUNT_PATH_INSIDE_CONTAINER }}
-        #      name: xpandion-vol-mount
-        #   resources:
-        #     {{- toYaml .Values.resources.PTD_SERVICE | nindent 12 }}
       volumes:
         - name: xpandion-vol-mount
           persistentVolumeClaim:
